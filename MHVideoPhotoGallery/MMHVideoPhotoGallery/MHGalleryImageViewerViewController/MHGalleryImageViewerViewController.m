@@ -105,11 +105,23 @@
         }
     }
     
-    UIBarButtonItem *doneBarButton =  [UIBarButtonItem.alloc initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                  target:self
-                                                                                  action:@selector(donePressed)];
+    UIBarButtonItem *doneBarButton = nil;
+    if (self.UICustomization.closeTitle) {
+        doneBarButton = [UIBarButtonItem.alloc initWithTitle:self.UICustomization.closeTitle
+                                                       style:UIBarButtonItemStyleDone
+                                                      target:self
+                                                      action:@selector(donePressed)];
+    } else {
+        doneBarButton = [UIBarButtonItem.alloc initWithBarButtonSystemItem:UIBarButtonSystemItemDone
+                                                                    target:self
+                                                                    action:@selector(donePressed)];
+    }
     
-    self.navigationItem.rightBarButtonItem = doneBarButton;
+    if (self.galleryViewController.UICustomization.backButtonState == MHBackButtonStateWithoutBackArrow) {
+        self.navigationItem.rightBarButtonItem = doneBarButton;
+    } else {
+        self.navigationItem.leftBarButtonItem = doneBarButton;
+    }
     
     self.view.backgroundColor = [self.UICustomization MHGalleryBackgroundColorForViewMode:MHGalleryViewModeImageViewerNavigationBarShown];
     
@@ -135,17 +147,18 @@
     [self.pageViewController didMoveToParentViewController:self];
     [self.view addSubview:self.pageViewController.view];
     
-    self.toolbar = [UIToolbar.alloc initWithFrame:CGRectMake(0, self.view.frame.size.height-44, self.view.frame.size.width, 44)];
-    if(self.currentOrientation == UIInterfaceOrientationLandscapeLeft || self.currentOrientation == UIInterfaceOrientationLandscapeRight){
-        if (self.view.bounds.size.height > self.view.bounds.size.width) {
-            self.toolbar.frame = CGRectMake(0, self.view.frame.size.width-44, self.view.frame.size.height, 44);
+    if (self.UICustomization.showToolbar) {
+        self.toolbar = [UIToolbar.alloc initWithFrame:CGRectMake(0, self.view.frame.size.height-44, self.view.frame.size.width, 44)];
+        if(self.currentOrientation == UIInterfaceOrientationLandscapeLeft || self.currentOrientation == UIInterfaceOrientationLandscapeRight){
+            if (self.view.bounds.size.height > self.view.bounds.size.width) {
+                self.toolbar.frame = CGRectMake(0, self.view.frame.size.width-44, self.view.frame.size.height, 44);
+            }
         }
+        
+        self.toolbar.tintColor = self.UICustomization.barButtonsTintColor;
+        self.toolbar.tag = 307;
+        self.toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
     }
-    
-    self.toolbar.tintColor = self.UICustomization.barButtonsTintColor;
-    self.toolbar.tag = 307;
-    self.toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleBottomMargin;
-    
     self.playStopBarButton = [UIBarButtonItem.alloc initWithImage:MHGalleryImage(@"play")
                                                             style:UIBarButtonItemStyleBordered
                                                            target:self
@@ -1059,7 +1072,9 @@
     [self.view bringSubviewToFront:self.moviePlayer.view];
     
     self.moviewPlayerButtonBehinde = [UIButton.alloc initWithFrame:self.view.bounds];
-    [self.moviewPlayerButtonBehinde addTarget:self action:@selector(handelImageTap:) forControlEvents:UIControlEventTouchUpInside];
+    UITapGestureRecognizer *imageTap =[UITapGestureRecognizer.alloc initWithTarget:self action:@selector(handelImageTap:)];
+    imageTap.numberOfTapsRequired =1;
+    [self.moviewPlayerButtonBehinde addGestureRecognizer:imageTap];
     self.moviewPlayerButtonBehinde.autoresizingMask = UIViewAutoresizingFlexibleWidth|UIViewAutoresizingFlexibleHeight;
     
     [self.view bringSubviewToFront:self.scrollView];

@@ -235,6 +235,11 @@
     gallery.presentingFromImageView = imageView;
     gallery.presentationIndex = indexPath.row;
     gallery.UICustomization.hideShare = YES;
+    gallery.UICustomization.showToolbar = NO;
+    gallery.UICustomization.closeTitle = @"Close";
+    gallery.transitionCustomization.fixXValueForDismiss = YES;
+    gallery.transitionCustomization.dismissWithScrollGestureOnFirstAndLastImage = NO;
+    [gallery.UICustomization setMHGalleryBackgroundColor:[UIColor blackColor] forViewMode:MHGalleryViewModeImageViewerNavigationBarShown];
     //  gallery.galleryDelegate = self;
     //  gallery.dataSource = self;
     __weak MHGalleryController *blockGallery = gallery;

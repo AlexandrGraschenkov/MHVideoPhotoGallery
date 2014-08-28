@@ -36,6 +36,8 @@ typedef NS_ENUM(NSUInteger, MHBackButtonState) {
 @property (nonatomic)        BOOL useCustomBackButtonImageOnImageViewer; //Default YES
 @property (nonatomic)        BOOL showOverView; //Default YES
 @property (nonatomic)        MHBackButtonState backButtonState; //Default MHBackButtonStateWithBackArrow
+@property (nonatomic)        BOOL showToolbar; // Default YES
+@property (nonatomic,strong) NSString *closeTitle; // Default nil, uses Done button
 
 @property (nonatomic,strong) UICollectionViewFlowLayout *overViewCollectionViewLayoutLandscape;
 @property (nonatomic,strong) UICollectionViewFlowLayout *overViewCollectionViewLayoutPortrait;

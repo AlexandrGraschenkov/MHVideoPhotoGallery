@@ -38,6 +38,7 @@
         self.hideShare = NO;
         self.backButtonState = MHBackButtonStateWithBackArrow;
         self.videoProgressTintColor = UIColor.blackColor;
+        self.showToolbar = YES;
         
         self.backgroundColorsForViewModes = [NSMutableDictionary  dictionaryWithDictionary:@{@"0":UIColor.blackColor,
                                                                                              @"1":UIColor.whiteColor,

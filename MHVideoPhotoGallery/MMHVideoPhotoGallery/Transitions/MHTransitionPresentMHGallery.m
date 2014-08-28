@@ -19,6 +19,14 @@
 
 @implementation MHTransitionPresentMHGallery
 
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        self.magnificationEffectOnShow = YES;
+    }
+    return self;
+}
 
 - (void)animateTransition:(id<UIViewControllerContextTransitioning>)transitionContext {
     
@@ -83,9 +91,7 @@
             imageViewer.descriptionViewBackground.alpha = 0;
         }
         
-        [UIView animateWithDuration:0.1 animations:^{
-            cellImageSnapshot.transform = CGAffineTransformScale(CGAffineTransformIdentity,1.02,1.02);
-        } completion:^(BOOL finished) {
+        void(^finishAnimation)() = ^{
             [UIView animateWithDuration:0.1 animations:^{
                 cellImageSnapshot.transform = CGAffineTransformScale(CGAffineTransformIdentity,1.00,1.00);
             } completion:^(BOOL finished) {
@@ -98,7 +104,16 @@
                     [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
                 }];
             }];
-        }];
+        };
+        if (self.magnificationEffectOnShow) {
+            [UIView animateWithDuration:0.1 animations:^{
+                cellImageSnapshot.transform = CGAffineTransformScale(CGAffineTransformIdentity,1.02,1.02);
+            } completion:^(BOOL finished) {
+                finishAnimation();
+            }];
+        } else {
+            finishAnimation();
+        }
     }];
 }
 - (NSTimeInterval)transitionDuration:(id<UIViewControllerContextTransitioning>)transitionContext {
