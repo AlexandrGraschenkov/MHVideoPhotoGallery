@@ -699,7 +699,7 @@
                 CGPoint currentPoint = [recognizer translationInView:self.view];
                 
                 if (self.viewController.transitionCustomization.fixXValueForDismiss) {
-                    self.interactiveTransition.changedPoint = CGPointMake(self.startPoint.x, self.lastPoint.y-currentPoint.y);
+                    self.interactiveTransition.changedPoint = CGPointMake(0, self.lastPoint.y-currentPoint.y);
                 }else{
                     self.interactiveTransition.changedPoint = CGPointMake(self.lastPoint.x-currentPoint.x, self.lastPoint.y-currentPoint.y);
                 }
@@ -800,10 +800,10 @@
         
         [self.view addGestureRecognizer:imageTap];
         
-        self.act = [UIActivityIndicatorView.alloc initWithFrame:self.view.bounds];
+        self.act = [UIActivityIndicatorView.alloc initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+        self.act.frame = self.view.bounds;
         [self.act startAnimating];
         self.act.hidesWhenStopped =YES;
-        self.act.tag =507;
         self.act.autoresizingMask =UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
         [self.scrollView addSubview:self.act];
         if (self.item.galleryType != MHGalleryTypeImage) {
@@ -1314,9 +1314,9 @@
     
     self.moviePlayer.backgroundView.backgroundColor = [self.viewController.UICustomization MHGalleryBackgroundColorForViewMode:[self currentViewMode]];
     self.scrollView.backgroundColor = [self.viewController.UICustomization MHGalleryBackgroundColorForViewMode:[self currentViewMode]];
+    self.act.color = [self.viewController.UICustomization MHGalleryLoadingActivityColorForViewMode:[self currentViewMode]];
     
     if (self.viewController.isHiddingToolBarAndNavigationBar) {
-        self.act.color = [UIColor whiteColor];
         self.moviePlayerToolBarTop.alpha =0;
     }else{
         if (self.moviePlayerToolBarTop) {
@@ -1326,7 +1326,6 @@
                 }
             }
         }
-        self.act.color = [UIColor blackColor];
     }
     if (self.item.galleryType == MHGalleryTypeVideo) {
         
@@ -1366,6 +1365,7 @@
     self.moviePlayer.backgroundView.backgroundColor = [self.viewController.UICustomization MHGalleryBackgroundColorForViewMode:viewMode];
     self.scrollView.backgroundColor = [self.viewController.UICustomization MHGalleryBackgroundColorForViewMode:viewMode];
     self.viewController.pageViewController.view.backgroundColor = [self.viewController.UICustomization MHGalleryBackgroundColorForViewMode:viewMode];
+    self.act.color = [self.viewController.UICustomization MHGalleryLoadingActivityColorForViewMode:viewMode];
     
     self.navigationController.navigationBar.alpha =alpha;
     self.viewController.toolbar.alpha =alpha;

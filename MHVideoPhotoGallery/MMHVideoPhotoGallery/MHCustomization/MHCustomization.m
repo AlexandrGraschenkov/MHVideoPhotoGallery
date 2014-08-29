@@ -23,6 +23,7 @@
 
 @interface MHUICustomization()
 @property(nonatomic,strong)NSMutableDictionary *backgroundColorsForViewModes;
+@property(nonatomic,strong)NSMutableDictionary *loadingColorsForViewModes;
 @end
 @implementation MHUICustomization
 
@@ -43,6 +44,10 @@
         self.backgroundColorsForViewModes = [NSMutableDictionary  dictionaryWithDictionary:@{@"0":UIColor.blackColor,
                                                                                              @"1":UIColor.whiteColor,
                                                                                              @"2":UIColor.whiteColor}];
+        
+        self.loadingColorsForViewModes = [NSMutableDictionary  dictionaryWithDictionary:@{@"0":UIColor.whiteColor,
+                                                                                          @"1":UIColor.darkGrayColor,
+                                                                                          @"2":UIColor.darkGrayColor}];
         
         CGSize screenSize = UIScreen.mainScreen.bounds.size;
         UICollectionViewFlowLayout *flowLayoutLanscape = UICollectionViewFlowLayout.new;
@@ -73,5 +78,14 @@
     return self.backgroundColorsForViewModes[[NSString stringWithFormat:@"%@",@(viewMode)]];
 }
 
+-(void)setMHGalleryLoadingActivityColor:(UIColor*)color forViewMode:(MHGalleryViewMode)viewMode
+{
+    [self.loadingColorsForViewModes setObject:color forKey:[NSString stringWithFormat:@"%@",@(viewMode)]];
+}
+
+-(UIColor*)MHGalleryLoadingActivityColorForViewMode:(MHGalleryViewMode)viewMode
+{
+    return self.loadingColorsForViewModes[[NSString stringWithFormat:@"%@",@(viewMode)]];
+}
 
 @end

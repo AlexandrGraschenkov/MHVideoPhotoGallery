@@ -47,6 +47,7 @@
     NSTimeInterval duration = [self transitionDuration:transitionContext];
     
     MHUIImageViewContentViewAnimation *cellImageSnapshot = [[MHUIImageViewContentViewAnimation alloc] initWithFrame:[containerView convertRect:self.presentingImageView.frame fromView:self.presentingImageView.superview]];
+    cellImageSnapshot.backgroundColor = [UIColor clearColor];
     cellImageSnapshot.image = self.presentingImageView.image;
     
     cellImageSnapshot.clipsToBounds = self.presentingImageView.clipsToBounds;

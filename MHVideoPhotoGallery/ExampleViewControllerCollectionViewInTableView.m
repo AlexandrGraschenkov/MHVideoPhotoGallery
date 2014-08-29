@@ -47,8 +47,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    
+    SDImageCache *imageCache = [SDImageCache sharedImageCache];
+    [imageCache clearMemory];
+    [imageCache clearDisk];
     self.title = @"CollectionView";
     
     MHGalleryItem *localVideo = [MHGalleryItem.alloc initWithURL:[[NSURL fileURLWithPath:[[NSBundle mainBundle] pathForResource:@"Sydney-iPhone" ofType:@"m4v"]] absoluteString]
@@ -63,8 +64,9 @@
                                                  galleryType:MHGalleryTypeVideo];
     MHGalleryItem *vimeo3 = [MHGalleryItem.alloc initWithURL:@"http://vimeo.com/66841007"
                                                  galleryType:MHGalleryTypeVideo];
-    
-    MHGalleryItem *landschaft = [MHGalleryItem.alloc initWithURL:@"http://alles-bilder.de/landschaften/HD%20Landschaftsbilder%20(47).jpg"
+    MHGalleryItem *landschaft = [MHGalleryItem.alloc initWithURL:@"http://hdw9.com/wp-content/uploads/2013/07/red-tree-wallpaper-hd1.jpg"
+//    MHGalleryItem *landschaft = [MHGalleryItem.alloc initWithURL:@"http://www.hdwallpaperscool.com/wp-content/uploads/2013/11/nature-hd-wallpapers-beatiful-desktop-background-images.jpg"
+//    MHGalleryItem *landschaft = [MHGalleryItem.alloc initWithURL:@"http://alles-bilder.de/landschaften/HD%20Landschaftsbilder%20(47).jpg"
                                                      galleryType:MHGalleryTypeImage];
     
     MHGalleryItem *landschaft1 = [MHGalleryItem.alloc initWithURL:@"http://de.flash-screen.com/free-wallpaper/bezaubernde-landschaftsabbildung-hd/hd-bezaubernde-landschaftsder-tapete,1920x1200,56420.jpg"
@@ -239,7 +241,9 @@
     gallery.UICustomization.closeTitle = @"Close";
     gallery.transitionCustomization.fixXValueForDismiss = YES;
     gallery.transitionCustomization.dismissWithScrollGestureOnFirstAndLastImage = NO;
+    gallery.UICustomization.showOverView = NO;
     [gallery.UICustomization setMHGalleryBackgroundColor:[UIColor blackColor] forViewMode:MHGalleryViewModeImageViewerNavigationBarShown];
+    [gallery.UICustomization setMHGalleryLoadingActivityColor:[UIColor whiteColor] forViewMode:MHGalleryViewModeImageViewerNavigationBarShown];
     //  gallery.galleryDelegate = self;
     //  gallery.dataSource = self;
     __weak MHGalleryController *blockGallery = gallery;
@@ -261,7 +265,7 @@
                 
                 MHMediaPreviewCollectionViewCell *cell = (MHMediaPreviewCollectionViewCell*)[collectionView cellForItemAtIndexPath:newIndexPath];
                 
-                [blockGallery dismissViewControllerAnimated:YES dismissImageView:cell.thumbnail completion:^{
+                [blockGallery dismissViewControllerAnimated:YES dismissImageView:nil/*cell.thumbnail*/ completion:^{
                     
                     [self setNeedsStatusBarAppearanceUpdate];
                     

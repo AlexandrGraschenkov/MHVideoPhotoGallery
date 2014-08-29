@@ -84,7 +84,7 @@
 -(void)checkImageViewHasImage{
     if (!self.imageView.image) {
         UIView *view = [UIView.alloc initWithFrame:self.imageView.frame];
-        view.backgroundColor = [UIColor whiteColor];
+        view.backgroundColor = [UIColor clearColor];
         self.imageView.image =  MHImageFromView(view);
     }
 }

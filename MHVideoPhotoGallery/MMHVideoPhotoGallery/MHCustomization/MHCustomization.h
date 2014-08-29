@@ -45,4 +45,7 @@ typedef NS_ENUM(NSUInteger, MHBackButtonState) {
 -(void)setMHGalleryBackgroundColor:(UIColor*)color forViewMode:(MHGalleryViewMode)viewMode;
 -(UIColor*)MHGalleryBackgroundColorForViewMode:(MHGalleryViewMode)viewMode;
 
+-(void)setMHGalleryLoadingActivityColor:(UIColor*)color forViewMode:(MHGalleryViewMode)viewMode;
+-(UIColor*)MHGalleryLoadingActivityColorForViewMode:(MHGalleryViewMode)viewMode;
+
 @end
