@@ -99,8 +99,11 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             self.transitionImageView.hidden = YES;
-            
-            [UIView animateWithDuration:duration animations:^{
+            float animDuration = duration;
+            if (!self.transitionImageView) {
+                animDuration = 0.24;
+            }
+            [UIView animateWithDuration:animDuration animations:^{
                 whiteView.alpha =0;
                 [toViewControllerNC view].alpha = 1;
                 
@@ -114,9 +117,9 @@
                         cellImageSnapshot.contentMode = UIViewContentModeScaleAspectFill;
                     }
                 } else {
-                    CGRect frame = cellImageSnapshot.frame;
-                    frame.origin.y -= cellImageSnapshot.superview.bounds.size.height;
-                    cellImageSnapshot.frame = frame;
+//                    CGRect frame = cellImageSnapshot.frame;
+//                    frame.origin.y -= cellImageSnapshot.superview.bounds.size.height;
+//                    cellImageSnapshot.frame = frame;
                     cellImageSnapshot.alpha = 0;
                 }
             } completion:^(BOOL finished) {

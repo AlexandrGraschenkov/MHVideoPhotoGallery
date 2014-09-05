@@ -21,6 +21,7 @@
 @property (nonatomic, strong) UIBarButtonItem          *leftBarButton;
 @property (nonatomic, strong) UIBarButtonItem          *rightBarButton;
 @property (nonatomic, strong) UIBarButtonItem          *playStopBarButton;
+@property (nonatomic, strong) UIBarButtonItem          *parentPlayStopBarButton;
 @end
 
 @implementation MHGalleryImageViewerViewController
@@ -263,7 +264,8 @@
             return YES;
         }
     }
-    return ([touch.view isKindOfClass:UIControl.class] == NO);
+    BOOL isBarButton = [touch.view isKindOfClass:NSClassFromString(@"UIToolbarButton")];
+    return (![touch.view isKindOfClass:UIControl.class] && !isBarButton);
 }
 
 -(void)changeToPlayButton{
@@ -578,6 +580,7 @@
 @property (nonatomic)         CGPoint                  lastPoint;
 @property (nonatomic)         CGPoint                  lastPointPop;
 @property (nonatomic)         BOOL                     shouldPlayVideo;
+@property (nonatomic, strong) UIBarButtonItem *playStop;
 
 @end
 
@@ -741,6 +744,11 @@
     }
 }
 
+- (void)wtf
+{
+    NSLog(@"%@", @"wtf");
+}
+
 
 - (id)initWithMHMediaItem:(MHGalleryItem*)mediaItem
            viewController:(MHGalleryImageViewerViewController*)viewController{
@@ -818,7 +826,18 @@
             self.currentTimeMovie =0;
             self.wholeTimeMovie =0;
             
-            self.videoProgressView = [UIProgressView.alloc initWithFrame:CGRectMake(57, 21, self.view.frame.size.width-114, 3)];
+            float xOffset = 0;
+            if (!self.viewController.UICustomization.showToolbar) {
+                self.playStop = [[UIBarButtonItem alloc] initWithImage:MHGalleryImage(@"play")
+                                                                        style:UIBarButtonItemStylePlain
+                                                                       target:self
+                                                                       action:@selector(wtf)];
+                self.viewController.parentPlayStopBarButton = self.playStop;
+                self.moviePlayerToolBarTop.items = @[self.playStop];
+                xOffset = 40;
+            }
+            
+            self.videoProgressView = [UIProgressView.alloc initWithFrame:CGRectMake(xOffset + 57, 21, self.view.frame.size.width-114-xOffset, 3)];
             self.videoProgressView.layer.borderWidth =0.5;
             self.videoProgressView.layer.borderColor =[UIColor colorWithWhite:0 alpha:0.3].CGColor;
             self.videoProgressView.trackTintColor =[UIColor clearColor];
@@ -826,7 +845,7 @@
             self.videoProgressView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
             [self.moviePlayerToolBarTop addSubview:self.videoProgressView];
             
-            self.slider = [UISlider.alloc initWithFrame:CGRectMake(55, 0, self.view.frame.size.width-110, 44)];
+            self.slider = [UISlider.alloc initWithFrame:CGRectMake(xOffset + 55, 0, self.view.frame.size.width-110-xOffset, 44)];
             self.slider.maximumValue =10;
             self.slider.minimumValue =0;
             self.slider.minimumTrackTintColor = self.viewController.UICustomization.videoProgressTintColor;
@@ -837,7 +856,7 @@
             self.slider.autoresizingMask =UIViewAutoresizingFlexibleWidth;
             [self.moviePlayerToolBarTop addSubview:self.slider];
             
-            self.leftSliderLabel = [UILabel.alloc initWithFrame:CGRectMake(8, 0, 40, 43)];
+            self.leftSliderLabel = [UILabel.alloc initWithFrame:CGRectMake(xOffset+8, 0, 40, 43)];
             self.leftSliderLabel.font =[UIFont systemFontOfSize:14];
             self.leftSliderLabel.text = @"00:00";
             self.leftSliderLabel.textColor = self.viewController.UICustomization.videoProgressTintColor;
@@ -975,7 +994,6 @@
     return NO;
 }
 -(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
-    
     if (self.interactiveOverView) {
         if ([gestureRecognizer isKindOfClass:MHPinchGestureRecognizer.class]) {
             return YES;
@@ -1059,7 +1077,27 @@
     
     [self.view bringSubviewToFront:self.playButton];
     [self.view bringSubviewToFront:self.moviePlayerToolBarTop];
+    [self changeToPlayButton];
+}
+
+
+-(void)changeToPlayButton{
+    self.playStop.image = MHGalleryImage(@"play");
     [self.viewController changeToPlayButton];
+}
+
+-(void)changeToPauseButton{
+    self.playStop.image = MHGalleryImage(@"pause");
+    [self.viewController changeToPauseButton];
+}
+
+-(void)playStopButtonPressed{
+    if (self.isPlayingVideo) {
+        [self stopMovie];
+        [self changeToPlayButton];
+    }else{
+        [self playButtonPressed];
+    }
 }
 
 -(void)changeToPlayable{
@@ -1199,7 +1237,7 @@
     self.playButton.hidden =NO;
     self.playButton.frame = CGRectMake(self.viewController.view.frame.size.width/2-36, self.viewController.view.frame.size.height/2-36, 72, 72);
     [self.moviewPlayerButtonBehinde removeFromSuperview];
-    [self.viewController changeToPlayButton];
+    [self changeToPlayButton];
     [self updateTimerLabels];
     [self.slider setValue:0 animated:NO];
 }
@@ -1207,7 +1245,7 @@
 
 -(void)moviePlayBackDidFinish:(NSNotification *)notification{
     self.playingVideo = NO;
-    [self.viewController changeToPlayButton];
+    [self changeToPlayButton];
     self.playButton.hidden =NO;
     [self.view bringSubviewToFront:self.playButton];
     [self stopTimer];
@@ -1279,7 +1317,7 @@
         
         if (self.moviePlayer) {
             [self.moviePlayer play];
-            [self.viewController changeToPauseButton];
+            [self changeToPauseButton];
             
         }else{
             UIActivityIndicatorView *act = [UIActivityIndicatorView.alloc initWithFrame:self.view.bounds];
@@ -1336,7 +1374,7 @@
         if (self.imageView.image) {
             self.playButton.frame = CGRectMake(self.viewController.view.frame.size.width/2-36, self.viewController.view.frame.size.height/2-36, 72, 72);
         }
-        self.leftSliderLabel.frame = CGRectMake(8, 0, 40, 43);
+//        self.leftSliderLabel.frame = CGRectMake(8, 0, 40, 43);
         self.rightSliderLabel.frame =CGRectMake(self.viewController.view.bounds.size.width-50, 0, 50, 43);
         
         if(UIApplication.sharedApplication.statusBarOrientation != UIInterfaceOrientationPortrait){
@@ -1379,7 +1417,14 @@
     if (!self.viewController.isHiddingToolBarAndNavigationBar) {
         CGPoint tappedLocation = [gestureRecognizer locationInView:self.view];
         if (CGRectContainsPoint(self.moviePlayerToolBarTop.frame, tappedLocation)) {
-             return;
+            if (self.moviePlayerToolBarTop.items.count > 0) { // говнокод, но чтож поделаешь. Нормально отказатся от touch не получилось
+                CGRect playPauseFrame = self.moviePlayerToolBarTop.frame;
+                playPauseFrame.size.width = 100;
+                if (CGRectContainsPoint(playPauseFrame, tappedLocation)) {
+                    [self playStopButtonPressed];
+                }
+            }
+            return;
         }
         
         [UIView animateWithDuration:0.3 animations:^{
