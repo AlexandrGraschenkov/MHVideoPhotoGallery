@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = 'MHVideoPhotoGallery'
-  s.version      = '1.6.3'
+  s.version      = '1.6.4'
   s.license      = 'MIT'
   s.homepage     = 'https://github.com/AlexandrGraschenkov/MHVideoPhotoGallery'
   s.author = {
